@@ -2,6 +2,7 @@ import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 
+
 const BASE_DIR = path.join(os.homedir(), '.gemini', 'antigravity-ide', 'brain');
 const OUTPUT_DIR = path.join(import.meta.dirname, 'normalized_chats');
 
