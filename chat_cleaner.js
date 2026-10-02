@@ -4,8 +4,8 @@ import os from 'node:os';
 
 const BASE_DIR = path.join(os.homedir(), '.gemini', 'antigravity-ide', 'brain');
 
-const rawChatFilePath = (conversationId) => path.join(BASE_DIR, conversationId, '.system_generated', 'logs', 'transcript.jsonl');
-const cleanChatFilePath = (conversationId) => path.join(import.meta.dirname, 'normalized_chats', `${conversationId}_output.json`);
+const getRawChatFilePath = (conversationId) => path.join(BASE_DIR, conversationId, '.system_generated', 'logs', 'transcript.jsonl');
+const getCleanChatFilePath = (conversationId) => path.join(import.meta.dirname, 'normalized_chats', `${conversationId}_output.json`);
 
 async function getRawChatsDirNames() {
     try {
@@ -20,7 +20,7 @@ async function getRawChatsDirNames() {
 
 async function readRawChats(conversationId) {
     try {
-        const content = await readFile(rawChatFilePath(conversationId), 'utf-8');
+        const content = await readFile(getRawChatFilePath(conversationId), 'utf-8');
         return content;
     }
     catch (err) {
@@ -32,7 +32,7 @@ async function writeCleanChats(conversationId, content) {
     try {
         const output_dir = path.join(import.meta.dirname, 'normalized_chats');
         await mkdir(output_dir, { recursive: true });
-        await writeFile(cleanChatFilePath(conversationId), JSON.stringify(content, null, 2), 'utf-8');
+        await writeFile(getCleanChatFilePath(conversationId), JSON.stringify(content, null, 2), 'utf-8');
     }
     catch (err) {
         console.log('Error writing file:', err);
