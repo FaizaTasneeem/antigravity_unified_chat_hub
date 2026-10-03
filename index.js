@@ -1,12 +1,14 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 
 function createWindow() {
+    Menu.setApplicationMenu(null);
+
     const win = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 600,
     });
 
-    win.loadFile('index.html');
+    win.loadURL('http://localhost:5173/');
 }
 
 app.whenReady().then(createWindow);
