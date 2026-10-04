@@ -57,12 +57,7 @@ function generateCleanContent(rawContent) {
                 text = step.content;
             }
 
-            return {
-                sender,
-                text,
-                time: new Date(step.created_at).toLocaleString()
-            }
-
+            return { sender, text, time: new Date(step.created_at).toLocaleString() }
         })
         return cleanedFilteredStepsList;
     }

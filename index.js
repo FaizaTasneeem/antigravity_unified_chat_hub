@@ -2,7 +2,7 @@ import { app, BrowserWindow, Menu, ipcMain } from 'electron';
 import { createServer } from './frontend/node_modules/vite/dist/node/index.js';
 import path from 'path';
 import normalize_chats from './chat_cleaner.js'
-
+import { getChatMessages } from './chat_reader.js';
 
 let viteServer;
 
@@ -31,11 +31,16 @@ async function createWindow() {
         : mainWindow.loadURL('http://localhost:5173/');
 }
 
+function registerIpcHandlers(normalized_chatList) {
+    ipcMain.handle('get-chat-list', () => normalized_chatList);
+    ipcMain.handle('get-chat-msg', (id) => getChatMessages(id));
+}
+
 app.whenReady().then(async () => {
     try {
         const normalized_chatList = await normalize_chats();
+        registerIpcHandlers(normalized_chatList);
         if (!app.isPackaged) await startViteServer();
-        ipcMain.handle('get-chat-list', () => normalized_chatList);
         await createWindow();
     }
     catch (err) {
