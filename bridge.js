@@ -1,2 +1,6 @@
-import { contextBridge, ipcRenderer } from "electron";
+// import { contextBridge, ipcRenderer } from "electron";
+const { contextBridge, ipcRenderer } = require("electron");
 
+contextBridge.exposeInMainWorld('electronAPI', {
+    getChatList: () => ipcRenderer.invoke('get-chat-list')
+});

@@ -71,12 +71,13 @@ function generateCleanContent(rawContent) {
     }
 }
 
-export default async function run() {
+export default async function normalize_chats() {
     try {
         await mkdir(OUTPUT_DIR, { recursive: true });
 
         const folderNames = await getRawChatsDirNames() || [];
         const BATCH_SIZE = 15;
+        let outputFilesList = [];
 
         for (let i = 0; i < folderNames.length; i += BATCH_SIZE) {
             const batch = folderNames.slice(i, i + BATCH_SIZE);
@@ -86,11 +87,14 @@ export default async function run() {
                 const cleanContent = generateCleanContent(rawContent);
                 if (!cleanContent) return;
                 await writeCleanChats(folderName, cleanContent);
+                return folderName;
             });
-            await Promise.allSettled(promises);
+            outputFilesList = [...outputFilesList, ...await Promise.allSettled(promises)];
         }
+        const finalOutputFilesList = outputFilesList.filter(item => item.status === "fulfilled" && item.value).map(item => item.value);
+        return finalOutputFilesList;
     }
     catch (err) {
-        console.log('Error running process: ', err);
+        console.log('Error running normalizing process: ', err);
     }
 }

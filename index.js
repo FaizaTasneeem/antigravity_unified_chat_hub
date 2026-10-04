@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron';
 import { createServer } from './frontend/node_modules/vite/dist/node/index.js';
 import path from 'path';
-import run from './chat_cleaner.js'
+import normalize_chats from './chat_cleaner.js'
 
 
 let viteServer;
@@ -18,21 +18,30 @@ async function startViteServer() {
 async function createWindow() {
     Menu.setApplicationMenu(null);
 
-    if (!app.isPackaged) await startViteServer();
-
-    const win = new BrowserWindow({
+    const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        webPreferences: {
+            preload: path.join(import.meta.dirname, 'bridge.js')
+        }
     });
 
     app.isPackaged
-        ? win.loadFile(path.join('./frontend/dist/index.html'))
-        : win.loadURL('http://localhost:5173/');;
-
+        ? mainWindow.loadFile(path.join('./frontend/dist/index.html'))
+        : mainWindow.loadURL('http://localhost:5173/');
 }
 
-await run();
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+    try {
+        const normalized_chatList = await normalize_chats();
+        if (!app.isPackaged) await startViteServer();
+        ipcMain.handle('get-chat-list', () => normalized_chatList);
+        await createWindow();
+    }
+    catch (err) {
+        console.log('Error starting electron process: ', err);
+    }
+});
 
 app.on('before-quit', async () => {
     if (viteServer) {
