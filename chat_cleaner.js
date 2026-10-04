@@ -71,7 +71,7 @@ function generateCleanContent(rawContent) {
     }
 }
 
-async function run() {
+export default async function run() {
     try {
         await mkdir(OUTPUT_DIR, { recursive: true });
 
@@ -94,5 +94,3 @@ async function run() {
         console.log('Error running process: ', err);
     }
 }
-
-run();
