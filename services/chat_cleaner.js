@@ -1,6 +1,6 @@
 import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
 import { BASE_DIR, OUTPUT_DIR, getRawChatFilePath, getCleanChatFilePath } from '../utils.js';
-
+import { getConversationTitle } from './chat_title_extractor.js'
 
 async function getRawChatsDirNames() {
     try {
@@ -32,7 +32,7 @@ async function writeCleanChats(conversationId, content) {
     }
 }
 
-function generateCleanContent(rawContent) {
+function generateCleanContent(conversationId, chatTitle, rawContent) {
     try {
         const jsonArray = rawContent.trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
         const filteredStepsList = jsonArray.filter(step => step.type === "USER_INPUT" || (step.type === "PLANNER_RESPONSE" && step.content));
@@ -53,7 +53,7 @@ function generateCleanContent(rawContent) {
 
             return { sender, text, time: new Date(step.created_at).toLocaleString() }
         })
-        return cleanedFilteredStepsList;
+        return { id: conversationId, title: chatTitle, messages: cleanedFilteredStepsList };
     }
     catch (err) {
         console.log('Error generating clean content: ', err);
@@ -73,14 +73,14 @@ export default async function normalize_chats() {
             const promises = batch.map(async (folderName) => {
                 const rawContent = await readRawChats(folderName);
                 if (!rawContent) return;
-                const cleanContent = generateCleanContent(rawContent);
+                const chatTitle = getConversationTitle(folderName);
+                const cleanContent = generateCleanContent(folderName, chatTitle, rawContent);
                 if (!cleanContent) return;
                 await writeCleanChats(folderName, cleanContent);
-                return folderName;
+                return { conversationId: folderName, chatTitle };
             });
             outputFilesList = [...outputFilesList, ...await Promise.allSettled(promises)];
         }
-
         const finalOutputFilesList = outputFilesList.filter(item => item.status === "fulfilled" && item.value).map(item => item.value);
         return finalOutputFilesList;
     }

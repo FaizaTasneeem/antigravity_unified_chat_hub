@@ -39,6 +39,7 @@ function registerIpcHandlers(normalized_chatList) {
 app.whenReady().then(async () => {
     try {
         const normalized_chatList = await normalize_chats();
+        console.log(normalized_chatList)
         registerIpcHandlers(normalized_chatList);
         if (!app.isPackaged) await startViteServer();
         await createWindow();
