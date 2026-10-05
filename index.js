@@ -1,8 +1,8 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron';
 import { createServer } from './frontend/node_modules/vite/dist/node/index.js';
 import path from 'path';
-import normalize_chats from './chat_cleaner.js'
-import { getChatMessages } from './chat_reader.js';
+import normalize_chats from './services/chat_cleaner.js'
+import { getChatMessages } from './services/chat_reader.js';
 
 let viteServer;
 

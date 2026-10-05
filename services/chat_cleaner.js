@@ -1,13 +1,6 @@
 import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
-import path from 'node:path';
-import os from 'node:os';
+import { BASE_DIR, OUTPUT_DIR, getRawChatFilePath, getCleanChatFilePath } from '../utils';
 
-
-const BASE_DIR = path.join(os.homedir(), '.gemini', 'antigravity-ide', 'brain');
-const OUTPUT_DIR = path.join(import.meta.dirname, 'normalized_chats');
-
-const getRawChatFilePath = (conversationId) => path.join(BASE_DIR, conversationId, '.system_generated', 'logs', 'transcript.jsonl');
-const getCleanChatFilePath = (conversationId) => path.join(OUTPUT_DIR, `${conversationId}_output.json`);
 
 async function getRawChatsDirNames() {
     try {
@@ -16,7 +9,7 @@ async function getRawChatsDirNames() {
         return folderNames;
     }
     catch (error) {
-        console.log('Error reading directory:', error);
+        console.log('Error reading raw chat files directory:', error);
     }
 }
 
@@ -26,7 +19,7 @@ async function readRawChats(conversationId) {
         return content;
     }
     catch (err) {
-        console.log('Error reading file:', err);
+        console.log('Error reading raw chat file:', err);
     }
 }
 
@@ -35,7 +28,7 @@ async function writeCleanChats(conversationId, content) {
         await writeFile(getCleanChatFilePath(conversationId), JSON.stringify(content, null, 2), 'utf-8');
     }
     catch (err) {
-        console.log('Error writing file:', err);
+        console.log('Error writing clean chat file:', err);
     }
 }
 
@@ -43,6 +36,7 @@ function generateCleanContent(rawContent) {
     try {
         const jsonArray = rawContent.trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
         const filteredStepsList = jsonArray.filter(step => step.type === "USER_INPUT" || (step.type === "PLANNER_RESPONSE" && step.content));
+
         const cleanedFilteredStepsList = filteredStepsList.map(step => {
             let sender;
             let text;
@@ -86,6 +80,7 @@ export default async function normalize_chats() {
             });
             outputFilesList = [...outputFilesList, ...await Promise.allSettled(promises)];
         }
+
         const finalOutputFilesList = outputFilesList.filter(item => item.status === "fulfilled" && item.value).map(item => item.value);
         return finalOutputFilesList;
     }
