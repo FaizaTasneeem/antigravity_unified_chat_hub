@@ -10,10 +10,10 @@ function Sidebar({ chatId, setChatId }) {
     }, [chatList]);
 
     return (
-        <div className="max-w-[20%] h-screen overflow-y-auto flex flex-col gap-8 bg-[#111720] border border-[#1E2836] rounded-lb-lg text-[#F6F9FB] text-xs">
+        <div className="max-w-[250px] h-screen overflow-y-auto flex flex-col gap-8 bg-[#111720] border border-[#1E2836] rounded-lb-lg text-[#F6F9FB] text-xs">
             <span className="sticky top-0 bg-[#111720] z-10 p-4 flex justify-center text-xl font-bold">Antigravity Unified Chat Hub</span>
             {chatList &&
-                <div className="flex flex-col gap-2">
+                <div className="p-2 flex flex-col gap-2">
                     {chatList.map((chat, idx) => (
                         <div
                             key={idx}
