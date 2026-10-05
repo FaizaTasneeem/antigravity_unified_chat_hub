@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-function Sidebar({ setChatId }) {
+function Sidebar({ chatId, setChatId }) {
     const [chatList, setChatList] = useState([]);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ function Sidebar({ setChatId }) {
                     {chatList.map((chat, idx) => (
                         <div
                             key={idx}
-                            className="p-4 bg-[#111827] hover:bg-[#161F2D] border border-[#202936] rounded-lg truncate cursor-pointer"
+                            className={`p-4 hover:bg-[#161F2D] border rounded-lg truncate cursor-pointer ${chat === chatId ? 'bg-[#1B2340] border-indigo-500' : 'bg-[#111827] border-[#202936]'}`}
                             onClick={() => setChatId(chat)}
                         >
                             {chat}

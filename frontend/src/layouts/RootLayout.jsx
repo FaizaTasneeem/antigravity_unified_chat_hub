@@ -18,12 +18,17 @@ function RootLayout() {
 
     return (
         <div className="flex flex-row h-screen overflow-hidden bg-[#0d1117]">
-            <Sidebar setChatId={setChatId} />
+            <Sidebar chatId={chatId} setChatId={setChatId} />
             {chatMsg &&
-                <div className="flex-1 h-screen overflow-y-auto p-4 flex flex-col gap-3">
+                <div className="w-full flex-1 h-screen overflow-y-auto p-4 flex flex-col gap-3">
                     {chatMsg
                         .map(chat => (
-                            <div className={`w-[40%] p-3 bg-[#161F2D] rounded-lg text-white whitespace-pre-line flex ${chat.sender === "user" ? 'self-end' : 'self-start'}`}>{chat.text}</div>
+                            <div className={`flex gap-2 max-w-[70%] ${chat.sender === "user" ? 'self-end' : 'self-start'}`}>
+                                {chat.sender === "assistant" && <div className={`w-8 h-8 shrink-0 bg-[#5B5CF6] flex justify-center items-center rounded-full font-semibold text-white`}>AI</div>}
+                                <div className={`p-3 rounded-lg text-white whitespace-pre-line break-words ${chat.sender === "user" ? 'bg-[#1B2340]' : 'bg-[#161F2D]'}`}>
+                                    {chat.text}
+                                </div>
+                            </div>
                         ))
                     }
                 </div>
