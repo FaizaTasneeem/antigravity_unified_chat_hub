@@ -8,18 +8,24 @@ function RootLayout() {
 
     useEffect(() => {
         console.log("chatId ", chatId)
-        window.electronAPI.getChatMsg(chatId).then((data) => {
-            setChatMsg(data);
-        });
+        if (chatId) {
+            window.electronAPI.getChatMsg(chatId).then((data) => {
+                setChatMsg(JSON.parse(data));
+            });
+        }
     }, [chatId]);
 
 
     return (
-        <div className="">
+        <div className="flex flex-row h-screen overflow-hidden bg-[#0d1117]">
             <Sidebar setChatId={setChatId} />
             {chatMsg &&
-                <div>
-                    {chatMsg.filter(chat => chat.sender === "user").map(chat => <div>{chat.text}</div>)}
+                <div className="flex-1 h-screen overflow-y-auto p-4 flex flex-col gap-3">
+                    {chatMsg
+                        .map(chat => (
+                            <div className={`w-[40%] p-3 bg-[#161F2D] rounded-lg text-white whitespace-pre-line flex ${chat.sender === "user" ? 'self-end' : 'self-start'}`}>{chat.text}</div>
+                        ))
+                    }
                 </div>
             }
             <Outlet />

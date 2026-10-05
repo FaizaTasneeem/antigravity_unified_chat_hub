@@ -33,7 +33,7 @@ async function createWindow() {
 
 function registerIpcHandlers(normalized_chatList) {
     ipcMain.handle('get-chat-list', () => normalized_chatList);
-    ipcMain.handle('get-chat-msg', (id) => getChatMessages(id));
+    ipcMain.handle('get-chat-msg', (_event, id) => getChatMessages(id));
 }
 
 app.whenReady().then(async () => {
