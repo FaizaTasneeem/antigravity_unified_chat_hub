@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react"
 
-function Sidebar() {
+function Sidebar({ setChatId }) {
     const [chatList, setChatList] = useState([]);
 
     useEffect(() => {
         window.electronAPI.getChatList().then((data) => {
-            console.log(data);
             setChatList(data);
         });
-
-
     }, [chatList]);
 
     return (
@@ -18,7 +15,11 @@ function Sidebar() {
             {chatList &&
                 <div className="flex flex-col gap-2">
                     {chatList.map((chat, idx) => (
-                        <div key={idx} className="p-4 bg-[#111827] hover:bg-[#161F2D] border border-[#202936] rounded-lg truncate cursor-pointer">
+                        <div
+                            key={idx}
+                            className="p-4 bg-[#111827] hover:bg-[#161F2D] border border-[#202936] rounded-lg truncate cursor-pointer"
+                            onClick={() => setChatId(chat)}
+                        >
                             {chat}
                         </div>
                     ))}

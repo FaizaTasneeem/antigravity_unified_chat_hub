@@ -1,5 +1,5 @@
 import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
-import { BASE_DIR, OUTPUT_DIR, getRawChatFilePath, getCleanChatFilePath } from '../utils';
+import { BASE_DIR, OUTPUT_DIR, getRawChatFilePath, getCleanChatFilePath } from '../utils.js';
 
 
 async function getRawChatsDirNames() {
