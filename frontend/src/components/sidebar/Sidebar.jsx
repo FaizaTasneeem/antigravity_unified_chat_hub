@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom"
 
-function Sidebar({ chatId, setChatId }) {
+function Sidebar() {
     const [chatList, setChatList] = useState([]);
 
     useEffect(() => {
         window.electronAPI.getChatList().then((data) => {
             setChatList(data);
         });
-    }, [chatList]);
+    }, []);
 
     return (
         <div className="max-w-[250px] h-screen overflow-y-auto flex flex-col gap-8 bg-[#111720] border border-[#1E2836] rounded-lb-lg text-[#F6F9FB] text-xs">
@@ -19,7 +19,7 @@ function Sidebar({ chatId, setChatId }) {
                         <NavLink
                             key={chat.id}
                             to={`/chat/${chat.id}`}
-                            className={`p-4 hover:bg-[#161F2D] border rounded-lg truncate cursor-pointer ${chat.id === chatId ? 'bg-[#1B2340] border-indigo-500' : 'bg-[#111827] border-[#202936]'}`}
+                            className={({ isActive }) => `p-4 hover:bg-[#161F2D] border rounded-lg truncate cursor-pointer ${isActive ? 'bg-[#1B2340] border-indigo-500' : 'bg-[#111827] border-[#202936]'}`}
                         >
                             {chat.title || chat.id}
                         </NavLink>
