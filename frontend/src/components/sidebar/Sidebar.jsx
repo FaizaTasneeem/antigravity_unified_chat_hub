@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom"
 
 function Sidebar({ chatId, setChatId }) {
     const [chatList, setChatList] = useState([]);
@@ -14,14 +15,14 @@ function Sidebar({ chatId, setChatId }) {
             <span className="sticky top-0 bg-[#111720] z-10 p-4 flex justify-center text-xl font-bold">Antigravity Unified Chat Hub</span>
             {chatList &&
                 <div className="p-2 flex flex-col gap-2">
-                    {chatList.map((chat, idx) => (
-                        <div
-                            key={idx}
-                            className={`p-4 hover:bg-[#161F2D] border rounded-lg truncate cursor-pointer ${chat.conversationId === chatId ? 'bg-[#1B2340] border-indigo-500' : 'bg-[#111827] border-[#202936]'}`}
-                            onClick={() => setChatId(chat.conversationId)}
+                    {chatList.map(chat => (
+                        <NavLink
+                            key={chat.id}
+                            to={`/chat/${chat.id}`}
+                            className={`p-4 hover:bg-[#161F2D] border rounded-lg truncate cursor-pointer ${chat.id === chatId ? 'bg-[#1B2340] border-indigo-500' : 'bg-[#111827] border-[#202936]'}`}
                         >
-                            {chat.chatTitle || chat.conversationId}
-                        </div>
+                            {chat.title || chat.id}
+                        </NavLink>
                     ))}
                 </div>
             }
