@@ -27,7 +27,7 @@ function RootLayout() {
                             .map(chat => (
                                 <div className={`p-4 flex gap-2 max-w-[70%] ${chat.sender === "user" ? 'self-end' : 'self-start'}`}>
                                     {chat.sender === "assistant" && <div className={`w-8 h-8 shrink-0 bg-[#5B5CF6] flex justify-center items-center rounded-full font-semibold`}>AI</div>}
-                                    <div className={`p-3 rounded-lg whitespace-pre-line break-words ${chat.sender === "user" ? 'bg-[#1B2340]' : 'bg-[#161F2D]'}`}>
+                                    <div className={`p-3 rounded-lg whitespace-pre-line break-words min-w-0 ${chat.sender === "user" ? 'bg-[#1B2340]' : 'bg-[#161F2D]'}`}>
                                         {chat.text}
                                     </div>
                                 </div>
