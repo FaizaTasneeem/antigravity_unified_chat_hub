@@ -18,7 +18,7 @@ function Chat() {
         <div>
             {chatMsg &&
                 <div className="w-full flex-1 h-screen overflow-y-auto flex flex-col gap-3 text-white">
-                    <div className="sticky top-0 bg-[#111720] z-10 p-4 border-b border-[#202936] text-lg font-bold">{chatMsg.title}</div>
+                    <div className="sticky top-0 bg-[#111720] z-10 p-4 border-b border-[#202936] text-lg font-bold">{chatMsg.title || chatId}</div>
                     {chatMsg.messages &&
                         chatMsg.messages
                             .map(chat => (
