@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 function SearchModal({ chatList, setShowSearchModal }) {
     const [searchInput, setSearchInput] = useState('');
@@ -27,16 +28,16 @@ function SearchModal({ chatList, setShowSearchModal }) {
 
                 <div className="mt-8 flex flex-col overflow-y-auto w-full min-w-0">
                     {searchResults.length === 0 && chatList.map(chat => (
-                        <div className="cursor-pointer p-1 text-sm flex gap-2">
+                        <NavLink key={chat.id} to={`/chat/${chat.id}`} onClick={() => setShowSearchModal(false)} className="cursor-pointer p-1 text-sm flex gap-2">
                             <Search className="w-4 h-4 text-indigo-300 shrink-0" />
                             <span className="text-gray-400 truncate">{chat.title || chat.id}</span>
-                        </div>
+                        </NavLink>
                     ))}
                     {searchResults.length !== 0 && searchResults.map(chat => (
-                        <div className="cursor-pointer p-1 text-sm flex gap-2">
+                        <NavLink key={chat.id} to={`/chat/${chat.id}`} onClick={() => setShowSearchModal(false)} className="cursor-pointer p-1 text-sm flex gap-2">
                             <Search className="w-4 h-4 text-indigo-300 shrink-0" />
                             <span className="text-gray-400 truncate">{chat.title || chat.id}</span>
-                        </div>
+                        </NavLink>
                     ))}
                 </div>
             </div>
