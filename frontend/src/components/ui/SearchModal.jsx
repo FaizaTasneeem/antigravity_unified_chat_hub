@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
 
 function SearchModal({ chatList, setShowSearchModal }) {
-    const [searchInput, setSearchInput] = useState(null);
+    const [searchInput, setSearchInput] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
     useEffect(() => {
-        if (!searchInput) return;
-        const timer = setTimeout(() => { }, 500);
+        const timer = setTimeout(() => {
+            window.electronAPI.getSearchFileList(searchInput).then((data) => {
+                setSearchResults(data);
+            });
+        }, 500);
         return () => clearTimeout(timer);
     }, [searchInput]);
 
@@ -22,10 +26,16 @@ function SearchModal({ chatList, setShowSearchModal }) {
                 <input type="text" id="searchInput" name="searchInput" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="mt-4 p-1.5 bg-[#0E1014] rounded-lg border-2 border-gray-600 focus:border-[#5B5CF6]/60 focus:outline-none text-sm" placeholder="🔍 Search by text, title or id..." />
 
                 <div className="mt-8 flex flex-col overflow-y-auto w-full min-w-0">
-                    {chatList.map(chat => (
+                    {searchResults.length === 0 && chatList.map(chat => (
                         <div className="cursor-pointer p-1 text-sm flex gap-2">
                             <Search className="w-4 h-4 text-indigo-300 shrink-0" />
-                            <span className="truncate">{chat.title || chat.id}</span>
+                            <span className="text-gray-400 truncate">{chat.title || chat.id}</span>
+                        </div>
+                    ))}
+                    {searchResults.length !== 0 && searchResults.map(chat => (
+                        <div className="cursor-pointer p-1 text-sm flex gap-2">
+                            <Search className="w-4 h-4 text-indigo-300 shrink-0" />
+                            <span className="text-gray-400 truncate">{chat.title || chat.id}</span>
                         </div>
                     ))}
                 </div>
