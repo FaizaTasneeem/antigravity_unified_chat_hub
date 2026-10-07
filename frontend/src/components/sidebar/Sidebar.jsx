@@ -14,7 +14,7 @@ function Sidebar() {
     return (
         <div className="max-w-[250px] px-2 h-screen flex flex-col gap-8 bg-[#111720] border border-[#1E2836] rounded-lb-lg text-[#F6F9FB] text-xs">
             <span className="bg-[#111720] p-4 flex justify-center text-xl font-bold">Antigravity Unified Chat Hub</span>
-            <SearchButton />
+            <SearchButton chatList={chatList} />
             {chatList &&
                 <div className="overflow-y-auto p-2 flex flex-col gap-2">
                     {chatList.map(chat => (
