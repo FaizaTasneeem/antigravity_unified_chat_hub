@@ -18,7 +18,7 @@ function ChatMsgSearchModal({ setShowChatMsgSearchModal, chatMsg }) {
     }, [searchInput]);
 
     return (
-        <div className="bg-black/50 fixed inset-0 flex flex-col justify-center items-center">
+        <div className="bg-black/50 fixed inset-0 z-50 flex flex-col justify-center items-center">
             <div className="w-full max-w-md max-h-[350px] bg-[#111827] text-lg border border-gray-600 rounded-lg flex flex-col justify-left px-4 py-2">
                 <div className="w-full flex items-center justify-between">
                     <p className="text-sm lg:text-lg text-gray-400 font-bold italic">{`Search in this chat =>`}</p>

@@ -16,7 +16,7 @@ function SearchModal({ chatList, setShowSearchModal }) {
     }, [searchInput]);
 
     return (
-        <div className="bg-black/50 backdrop-blur-sm fixed inset-0 flex flex-col justify-center items-center">
+        <div className="z-50 bg-black/50 backdrop-blur-sm fixed inset-0 flex flex-col justify-center items-center">
             <div className="w-full max-w-md max-h-[350px] bg-[#111827] text-lg border border-gray-600 rounded-lg flex flex-col justify-left px-4 py-2">
                 <div className="w-full flex items-center justify-between">
                     <p className="text-lg font-bold">Search Conversations</p>

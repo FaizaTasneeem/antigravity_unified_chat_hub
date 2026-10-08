@@ -7,13 +7,16 @@ function SearchButton({ chatList }) {
 
     return (
         <>
-            <button
-                className="m-2 p-4 py-3 bg-[#5B5CF6]/10 hover:bg-[#5B5CF6]/20 border-2 border-[#5B5CF6]/30 hover:border-[#5B5CF6]/60 backdrop-blur-md shadow-[0_0_12px_rgba(91,92,246,0.25)] rounded-full font-bold text-sm text-indigo-200 hover:text-white transition-all duration-200 cursor-pointer flex gap-2 items-center justify-center"
-                onClick={() => setShowSearchModal(!showSearchModal)}
-            >
-                <Search className="w-4 h-4 text-indigo-300" />
-                Search
-            </button>
+            <div className="m-2 p-[1.5px] rounded-full bg-gradient-to-r from-[#4285F4] via-[#67CE8A] via-[#F5CF57] to-[#F07869]">
+                <button
+                    onClick={() => setShowSearchModal(!showSearchModal)}
+                    className="w-full py-2 px-4 bg-[#15243D] hover:bg-[#1b2d4b] rounded-full text-sm font-medium text-[#F2F4F8] flex items-center justify-center gap-2 cursor-pointer transition-all"
+                >
+                    <Search className="w-4 h-4 text-[#70DFFF]" />
+                    Search
+                </button>
+            </div>
+
 
             {showSearchModal &&
                 <SearchModal chatList={chatList} setShowSearchModal={setShowSearchModal} />

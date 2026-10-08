@@ -6,7 +6,7 @@ function ChatHeader({ chatMsg }) {
     const [showChatMsgSearchModal, setShowChatMsgSearchModal] = useState(false);
 
     return (
-        <div className="bg-[#111720] p-4 flex justify-between items-center border-b border-[#202936]">
+        <div className="bg-[#101725]/60 p-4 flex justify-between items-center border-b border-[#8CCFFF]/20">
             <span className="w-[80%] text-sm lg:text-lg font-bold">{chatMsg.title || chatMsg.id}</span>
             <button
                 onClick={() => setShowChatMsgSearchModal(true)}

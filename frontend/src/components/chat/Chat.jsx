@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import ChatHeader from "./ChatHeader";
 
 function Chat() {
@@ -24,7 +25,7 @@ function Chat() {
     return (
         <>
             {chatMsg &&
-                <div className="flex-1 min-w-0 h-screen flex flex-col text-white">
+                <div className="flex-1 min-w-0 h-screen flex flex-col text-[#F2F4F8] bg-transparent">
                     <ChatHeader chatMsg={chatMsg} />
 
                     <div className="flex-1 min-w-0 min-h-0 overflow-y-auto flex flex-col gap-3 p-4">
@@ -34,12 +35,15 @@ function Chat() {
                                     const isMatch = searchStr && chat.text.toLowerCase().includes(searchStr.toLowerCase());
                                     return (
                                         <div key={idx} className={`p-4 flex gap-2 max-w-[70%] ${chat.sender === "user" ? 'self-end' : 'self-start'}`}>
-                                            {chat.sender === "assistant" && <div className={`w-8 h-8 shrink-0 bg-[#5B5CF6] flex justify-center items-center rounded-full font-semibold`}>AI</div>}
+                                            {chat.sender === "assistant" && <div className={`w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-bold text-xs text-[#0C1016] shadow-md bg-[radial-gradient(circle_at_30%_30%,#4285F4_0%,#56C7EA_34%,#67CE8A_60%,#F5CF57_82%,#F07869_100%)]`}>AI</div>}
                                             <div
                                                 ref={idx === firstMatchIdx ? (el) => el?.scrollIntoView({ behavior: "smooth", block: "center" }) : null}
-                                                className={`p-3 rounded-lg whitespace-pre-line break-words break-all min-w-0 ${chat.sender === "user" ? 'bg-[#1B2340]' : 'bg-[#161F2D]'} ${isMatch ? 'border border-indigo-500' : ''}`}
+                                                className={`p-5 rounded-2xl whitespace-pre-line break-words break-all min-w-0 backdrop-blur-xl border border-[#8CCFFF]/30 shadow-[0_8px_20px_rgba(2,8,23,0.251)] text-[#F2F4F8] ${chat.sender === "user" ? 'bg-[#213450]/[0.569]' : 'bg-[#152338]/[0.722]'
+                                                    } ${isMatch ? 'ring-2 ring-[#56C7EA] border-[#56C7EA]' : ''}`}
                                             >
-                                                {chat.text}
+                                                <ReactMarkdown>
+                                                    {chat.text}
+                                                </ReactMarkdown>
                                             </div>
                                         </div>
                                     )
