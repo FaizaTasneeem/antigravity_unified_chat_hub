@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import ChatHeader from "./ChatHeader";
 
 function Chat() {
     const [chatMsg, setChatMsg] = useState(null);
@@ -24,9 +25,7 @@ function Chat() {
         <>
             {chatMsg &&
                 <div className="flex-1 min-w-0 h-screen flex flex-col text-white">
-                    <div className="bg-[#111720] p-4 border-b border-[#202936] text-lg font-bold">
-                        {chatMsg.title || chatId}
-                    </div>
+                    <ChatHeader chatMsg={chatMsg} />
 
                     <div className="flex-1 min-w-0 min-h-0 overflow-y-auto flex flex-col gap-3 p-4">
                         {chatMsg.messages &&
