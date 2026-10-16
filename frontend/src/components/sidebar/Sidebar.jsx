@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../ui/Logo";
 import SearchButton from "../ui/SearchButton";
+import StartNewConvoButton from "../ui/StartNewConvoButton";
 
 function Sidebar() {
     const [chatList, setChatList] = useState([]);
@@ -15,7 +16,10 @@ function Sidebar() {
     return (
         <div className="max-w-[250px] px-2 h-screen flex flex-col gap-8 bg-[#101A30]/[0.502] border-r border-[#8CCFFF]/30 rounded-lb-lg text-[#F6F9FB] text-xs">
             <Logo />
-            <SearchButton chatList={chatList} />
+            <div className="flex flex-col gap-2">
+                <SearchButton chatList={chatList} />
+                <StartNewConvoButton />
+            </div>
             {chatList &&
                 <div className="overflow-y-auto p-2 flex flex-col gap-2">
                     {chatList.map(chat => (

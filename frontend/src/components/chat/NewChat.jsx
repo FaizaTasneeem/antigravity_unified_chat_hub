@@ -1,0 +1,22 @@
+function NewChat() {
+    return (
+        <div className="p-4 flex-1 min-w-0 h-screen flex flex-col justify-end items-center text-[#F2F4F8] bg-transparent">
+
+            <div className="relative w-[80%] max-w-3xl rounded-full p-[2px] overflow-hidden group focus-within:bg-[#1A73E8] focus-within:shadow-[0_0_20px_rgba(26,115,232,0.45)] transition-all">
+
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-focus-within:hidden">
+                    <div className="w-[300%] aspect-square animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_0deg,#1A73E8,#00C853,#FFB300,#FF3B30,#1A73E8)]" />
+                </div>
+
+                <input
+                    type="text"
+                    placeholder="Type a new message..."
+                    className="relative z-10 w-full px-6 py-4 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
+                />
+            </div>
+
+        </div>
+    )
+}
+
+export default NewChat
