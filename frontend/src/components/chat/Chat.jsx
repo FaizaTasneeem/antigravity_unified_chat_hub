@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import ChatHeader from "./ChatHeader";
+import NewChatInput from "./NewChatInput";
 
 function Chat() {
     const [chatMsg, setChatMsg] = useState(null);
@@ -89,6 +90,12 @@ function Chat() {
                                 })
                         }
                     </div>
+
+
+                    <div className="p-4 flex justify-center items-center">
+                        <NewChatInput />
+                    </div>
+
                 </div>
             }
         </>
