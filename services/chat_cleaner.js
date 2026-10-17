@@ -23,7 +23,7 @@ async function readRawChats(conversationId) {
     }
 }
 
-async function writeCleanChats(conversationId, content) {
+export async function writeCleanChats(conversationId, content) {
     try {
         await writeFile(getCleanChatFilePath(conversationId), JSON.stringify(content, null, 2), 'utf-8');
     }

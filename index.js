@@ -3,6 +3,7 @@ import { createServer } from './frontend/node_modules/vite/dist/node/index.js';
 import path from 'path';
 import normalize_chats from './services/chat_cleaner.js'
 import { getChatMessages, getSearchFileList } from './services/clean_chat_manager.js';
+import generate_gemini_response from './services/gemini_service.js';
 
 let viteServer;
 
@@ -35,6 +36,7 @@ function registerIpcHandlers(normalized_chatList) {
     ipcMain.handle('get-chat-list', () => normalized_chatList);
     ipcMain.handle('get-chat-msg', (_event, id) => getChatMessages(id));
     ipcMain.handle('get-search-file-list', (_event, searchStr) => getSearchFileList(searchStr));
+    ipcMain.handle('send-msg-to-ai', (_event, chatId, newChatMsgList) => generate_gemini_response(chatId, newChatMsgList));
 }
 
 app.whenReady().then(async () => {

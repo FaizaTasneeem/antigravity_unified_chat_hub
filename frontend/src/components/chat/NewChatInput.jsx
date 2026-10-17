@@ -1,14 +1,16 @@
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
 
-function NewChatInput({ chatId, chatMsgList, setChatMsg }) {
+function NewChatInput({ chatId, chatMsg, setChatMsg }) {
     const [newMsgInput, setNewMsgInput] = useState(null);
 
     function handleNewMsgSubmit(e) {
         e.preventDefault();
-        const newChatMsgList = [...chatMsgList, { sender: "user", text: e.target.value, time: new Date().toLocaleString() }];
-        window.electronAPI.sendMessage(chatId, newChatMsgList).then((data) => {
-            setChatMsg(JSON.parse(data));
+        const newChatMsgList = [...chatMsg.messages, { sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
+        const newChat = { ...chatMsg, messages: newChatMsgList };
+        setChatMsg(newChat);
+        window.electronAPI.sendMessage(chatId, newChat).then((data) => {
+            sendMessageToAI(data);
         });
     }
 

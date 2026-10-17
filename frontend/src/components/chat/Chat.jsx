@@ -51,7 +51,7 @@ function Chat() {
 
 
                     <div className="p-4 flex justify-center items-center">
-                        <NewChatInput chatId={chatId} chatMsgList={chatMsg.messages} setChatMsg={setChatMsg} />
+                        <NewChatInput chatId={chatId} chatMsg={chatMsg} setChatMsg={setChatMsg} />
                     </div>
 
                 </div>
