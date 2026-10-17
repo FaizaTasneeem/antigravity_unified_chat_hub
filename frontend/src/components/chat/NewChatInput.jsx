@@ -2,15 +2,16 @@ import { useState } from "react"
 import { ArrowRight } from "lucide-react"
 
 function NewChatInput({ chatId, chatMsg, setChatMsg }) {
-    const [newMsgInput, setNewMsgInput] = useState(null);
+    const [newMsgInput, setNewMsgInput] = useState("");
 
     function handleNewMsgSubmit(e) {
         e.preventDefault();
+        setNewMsgInput("");
         const newChatMsgList = [...chatMsg.messages, { sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
         const newChat = { ...chatMsg, messages: newChatMsgList };
         setChatMsg(newChat);
-        window.electronAPI.sendMessage(chatId, newChat).then((data) => {
-            sendMessageToAI(data);
+        window.electronAPI.sendMessageToAI(chatId, newChat).then((data) => {
+            setChatMsg(data);
         });
     }
 
@@ -21,7 +22,7 @@ function NewChatInput({ chatId, chatMsg, setChatMsg }) {
                 <div className="w-[300%] aspect-square animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_0deg,#1A73E8,#00C853,#FFB300,#FF3B30,#1A73E8)]" />
             </div>
 
-            <form action="" className="flex relative">
+            <form onSubmit={handleNewMsgSubmit} className="flex relative">
                 <input
                     type="text"
                     value={newMsgInput}
@@ -31,7 +32,6 @@ function NewChatInput({ chatId, chatMsg, setChatMsg }) {
                 />
 
                 <button
-                    onClick={handleNewMsgSubmit}
                     className="absolute z-90 right-0 cursor-pointer p-4 border-2 border-[#1A73E8] rounded-full"
                 >
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
