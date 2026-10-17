@@ -1,11 +1,15 @@
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
 
-function NewChatInput() {
+function NewChatInput({ chatId, chatMsgList, setChatMsg }) {
     const [newMsgInput, setNewMsgInput] = useState(null);
 
     function handleNewMsgSubmit(e) {
         e.preventDefault();
+        const newChatMsgList = [...chatMsgList, { sender: "user", text: e.target.value, time: new Date().toLocaleString() }];
+        window.electronAPI.sendMessage(chatId, newChatMsgList).then((data) => {
+            setChatMsg(JSON.parse(data));
+        });
     }
 
     return (
@@ -26,7 +30,7 @@ function NewChatInput() {
 
                 <button
                     onClick={handleNewMsgSubmit}
-                    className="absolute z-90 right-0 cursor-pointer p-4 border border-[#1A73E8] rounded-full"
+                    className="absolute z-90 right-0 cursor-pointer p-4 border-2 border-[#1A73E8] rounded-full"
                 >
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
                 </button>
