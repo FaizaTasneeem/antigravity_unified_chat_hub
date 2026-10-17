@@ -1,6 +1,13 @@
+import { useState } from "react"
 import { ArrowRight } from "lucide-react"
 
 function NewChatInput() {
+    const [newMsgInput, setNewMsgInput] = useState(null);
+
+    function handleNewMsgSubmit(e) {
+        e.preventDefault();
+    }
+
     return (
         <div className="relative w-[80%] max-w-3xl rounded-full p-[2px] overflow-hidden group focus-within:bg-[#1A73E8] focus-within:shadow-[0_0_20px_rgba(26,115,232,0.45)] transition-all">
 
@@ -11,11 +18,16 @@ function NewChatInput() {
             <form action="" className="flex relative">
                 <input
                     type="text"
+                    value={newMsgInput}
+                    onChange={(e) => setNewMsgInput(e.target.value)}
                     placeholder="Type a new message..."
                     className="relative z-10 w-full px-6 py-4 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
                 />
 
-                <button className="absolute z-90 right-0 cursor-pointer p-4 border border-[#1A73E8] rounded-full">
+                <button
+                    onClick={handleNewMsgSubmit}
+                    className="absolute z-90 right-0 cursor-pointer p-4 border border-[#1A73E8] rounded-full"
+                >
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
                 </button>
 
