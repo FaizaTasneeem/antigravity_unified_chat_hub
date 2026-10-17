@@ -32,7 +32,7 @@ function NewChatInput({ chatId, chatMsg, setChatMsg }) {
                 />
 
                 <button
-                    className="absolute z-90 right-0 cursor-pointer p-4 border-2 border-[#1A73E8] rounded-full"
+                    className="absolute z-90 right-0 cursor-pointer p-4 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full"
                 >
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
                 </button>
