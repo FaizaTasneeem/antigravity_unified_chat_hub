@@ -1,17 +1,19 @@
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
 
-function NewChatInput({ chatId, chatMsg, setChatMsg }) {
+function NewChatInput({ chatId, chatMsg, setChatMsg, setShowAIResponseLoading }) {
     const [newMsgInput, setNewMsgInput] = useState("");
 
     function handleNewMsgSubmit(e) {
         e.preventDefault();
+        setShowAIResponseLoading(true);
         setNewMsgInput("");
         const newChatMsgList = [...chatMsg.messages, { sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
         const newChat = { ...chatMsg, messages: newChatMsgList };
         setChatMsg(newChat);
         window.electronAPI.sendMessageToAI(chatId, newChat).then((data) => {
             setChatMsg(data);
+            setShowAIResponseLoading(false);
         });
     }
 
@@ -31,9 +33,7 @@ function NewChatInput({ chatId, chatMsg, setChatMsg }) {
                     className="relative z-10 w-full px-6 py-4 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
                 />
 
-                <button
-                    className="absolute z-90 right-0 cursor-pointer p-4 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full"
-                >
+                <button className="absolute z-90 right-0 cursor-pointer p-4 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full">
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
                 </button>
 
