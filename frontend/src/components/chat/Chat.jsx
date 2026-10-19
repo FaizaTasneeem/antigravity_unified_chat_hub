@@ -7,7 +7,7 @@ import TypingLoader from "../loader/TypingLoader";
 
 function Chat() {
     const [chatMsg, setChatMsg] = useState(null);
-    const [showAIResponseLoading, setShowAIResponseLoading] = useState(true);
+    const [showAIResponseLoading, setShowAIResponseLoading] = useState(false);
     const { id: chatId } = useParams();
     const [searchParams] = useSearchParams();
     const searchStr = searchParams.get("searchStr");

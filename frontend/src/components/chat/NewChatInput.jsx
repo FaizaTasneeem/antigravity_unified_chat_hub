@@ -30,7 +30,7 @@ function NewChatInput({ chatId, chatMsg, setChatMsg, setShowAIResponseLoading })
                     value={newMsgInput}
                     onChange={(e) => setNewMsgInput(e.target.value)}
                     placeholder="Type a new message..."
-                    className="relative z-10 w-full px-6 py-4 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
+                    className="relative z-10 w-full pl-6 pr-16 py-4 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
                 />
 
                 <button className="absolute z-90 right-0 cursor-pointer p-4 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full">
