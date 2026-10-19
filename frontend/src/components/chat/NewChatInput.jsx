@@ -1,7 +1,10 @@
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
+import { chatStore } from "../../store/AppStore";
 
-function NewChatInput({ chatId, chatMsg, setChatMsg, setShowAIResponseLoading }) {
+function NewChatInput({ chatId }) {
+    const { chatMsg, setChatMsg, setShowAIResponseLoading } = chatStore();
+
     const [newMsgInput, setNewMsgInput] = useState("");
 
     function handleNewMsgSubmit(e) {

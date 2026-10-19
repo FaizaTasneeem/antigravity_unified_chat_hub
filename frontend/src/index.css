@@ -52,3 +52,15 @@
 ::-webkit-scrollbar-thumb:hover {
     background-color: #3a4b63;
 }
+
+.group:hover .group-hover-rainbow {
+    opacity: 1;
+}
+
+.group:hover .group-hover-blue {
+    opacity: 0;
+}
+
+.group:hover .group-hover-btn-bg {
+    background-color: #1558bf;
+}

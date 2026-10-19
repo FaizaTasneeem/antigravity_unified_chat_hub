@@ -8,7 +8,7 @@ function Sidebar() {
     const [chatList, setChatList] = useState([]);
 
     useEffect(() => {
-        window.electronAPI.getChatList().then((data) => {
+        window.electronAPI?.getChatList?.().then((data) => {
             setChatList(data);
         });
     }, []);

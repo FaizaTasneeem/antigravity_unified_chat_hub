@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import ChatHeader from "./ChatHeader";
 import NewChatInput from "./NewChatInput";
 import ChatMessageContent from "./ChatMessageContent";
 import TypingLoader from "../loader/TypingLoader";
+import { chatStore } from "../../store/AppStore";
 
 function Chat() {
-    const [chatMsg, setChatMsg] = useState(null);
-    const [showAIResponseLoading, setShowAIResponseLoading] = useState(false);
+    const { chatMsg, setChatMsg, showAIResponseLoading } = chatStore();
+
     const { id: chatId } = useParams();
     const [searchParams] = useSearchParams();
     const searchStr = searchParams.get("searchStr");
@@ -59,7 +60,7 @@ function Chat() {
                     {showAIResponseLoading && <TypingLoader className="ml-14" />}
 
                     <div className="p-4 flex justify-center items-center">
-                        <NewChatInput chatId={chatId} chatMsg={chatMsg} setChatMsg={setChatMsg} setShowAIResponseLoading={setShowAIResponseLoading} />
+                        <NewChatInput chatId={chatId} />
                     </div>
 
                 </div>
