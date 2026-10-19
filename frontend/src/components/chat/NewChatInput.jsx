@@ -1,10 +1,11 @@
-import { useState } from "react"
-import { ArrowRight } from "lucide-react"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { chatStore } from "../../store/AppStore";
 
 function NewChatInput({ chatId }) {
     const { chatMsg, setChatMsg, setShowAIResponseLoading } = chatStore();
-
+    const navigate = useNavigate();
     const [newMsgInput, setNewMsgInput] = useState("");
 
     function handleNewMsgSubmit(e) {
@@ -15,6 +16,10 @@ function NewChatInput({ chatId }) {
         const newChat = appendUserMessage();
         setChatMsg(newChat);
 
+        if (!chatId) {
+            navigate(`/chat/${newChat.id}`);
+        }
+
         window.electronAPI.sendMessageToAI(chatId, newChat).then((data) => {
             setChatMsg(data);
             setShowAIResponseLoading(false);
@@ -22,16 +27,15 @@ function NewChatInput({ chatId }) {
     }
 
     function appendUserMessage() {
-        let newChat;
         if (chatMsg) {
             const newChatMsgList = [...chatMsg.messages, { sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
-            newChat = { ...chatMsg, messages: newChatMsgList };
+            return { ...chatMsg, messages: newChatMsgList };
         }
         else {
+            const newId = chatId || crypto.randomUUID();
             const newChatMsgList = [{ sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
-            newChat = { ...chatMsg, id: chatId, title: chatId, messages: newChatMsgList };
+            return { ...chatMsg, id: newId, title: newId, messages: newChatMsgList };
         }
-        return newChat;
     }
 
     return (
