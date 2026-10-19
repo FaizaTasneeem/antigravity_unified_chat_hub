@@ -11,13 +11,27 @@ function NewChatInput({ chatId }) {
         e.preventDefault();
         setShowAIResponseLoading(true);
         setNewMsgInput("");
-        const newChatMsgList = [...chatMsg.messages, { sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
-        const newChat = { ...chatMsg, messages: newChatMsgList };
+
+        const newChat = appendUserMessage();
         setChatMsg(newChat);
+
         window.electronAPI.sendMessageToAI(chatId, newChat).then((data) => {
             setChatMsg(data);
             setShowAIResponseLoading(false);
         });
+    }
+
+    function appendUserMessage() {
+        let newChat;
+        if (chatMsg) {
+            const newChatMsgList = [...chatMsg.messages, { sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
+            newChat = { ...chatMsg, messages: newChatMsgList };
+        }
+        else {
+            const newChatMsgList = [{ sender: "user", text: newMsgInput, time: new Date().toLocaleString() }];
+            newChat = { ...chatMsg, id: chatId, title: chatId, messages: newChatMsgList };
+        }
+        return newChat;
     }
 
     return (
@@ -33,10 +47,10 @@ function NewChatInput({ chatId }) {
                     value={newMsgInput}
                     onChange={(e) => setNewMsgInput(e.target.value)}
                     placeholder="Type a new message..."
-                    className="relative z-10 w-full pl-6 pr-16 py-4 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
+                    className="relative z-10 w-full pl-6 pr-16 py-3 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
                 />
 
-                <button className="absolute z-90 right-0 cursor-pointer p-4 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full">
+                <button className="absolute z-90 right-0 cursor-pointer p-3 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full">
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
                 </button>
 

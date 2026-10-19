@@ -15,7 +15,7 @@ function Chat() {
 
     useEffect(() => {
         console.log("chatId ", chatId)
-        if (chatId) {
+        if (chatId && chatMsg?.id !== chatId) {
             window.electronAPI.getChatMsg(chatId).then((data) => {
                 setChatMsg(JSON.parse(data));
             });
