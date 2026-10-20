@@ -1,4 +1,4 @@
-import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, readdir, mkdir, access } from 'node:fs/promises';
 import { BASE_DIR, OUTPUT_DIR, getRawChatFilePath, getCleanChatFilePath } from '../utils.js';
 import { getConversationTitle } from './chat_title_extractor.js'
 
@@ -60,6 +60,29 @@ function generateCleanContent(conversationId, chatTitle, rawContent) {
     }
 }
 
+async function normalizeSingleChat(folderName) {
+    const cleanPath = getCleanChatFilePath(folderName);
+    const exists = await access(cleanPath).then(() => true).catch(() => false);
+    let content;
+
+    if (exists) content = JSON.parse(await readFile(cleanPath, 'utf-8'));
+    else {
+        const rawContent = await readRawChats(folderName);
+        if (!rawContent) return;
+
+        const chatTitle = getConversationTitle(folderName);
+        const cleanContent = generateCleanContent(folderName, chatTitle, rawContent);
+        if (!cleanContent) return;
+
+        await writeCleanChats(folderName, cleanContent);
+        content = cleanContent;
+    }
+
+    const lastMessage = content.messages?.at(-1);
+    const timestamp = lastMessage ? new Date(lastMessage.time).getTime() : 0;
+    return { id: content.id, title: content.title, timestamp };
+}
+
 export default async function normalize_chats() {
     try {
         await mkdir(OUTPUT_DIR, { recursive: true });
@@ -70,17 +93,7 @@ export default async function normalize_chats() {
 
         for (let i = 0; i < folderNames.length; i += BATCH_SIZE) {
             const batch = folderNames.slice(i, i + BATCH_SIZE);
-            const promises = batch.map(async (folderName) => {
-                const rawContent = await readRawChats(folderName);
-                if (!rawContent) return;
-                const chatTitle = getConversationTitle(folderName);
-                const cleanContent = generateCleanContent(folderName, chatTitle, rawContent);
-                if (!cleanContent) return;
-                await writeCleanChats(folderName, cleanContent);
-                const lastMessage = cleanContent.messages?.at(-1);
-                const timestamp = lastMessage ? new Date(lastMessage.time).getTime() : 0;
-                return { id: cleanContent.id, title: cleanContent.title, timestamp };
-            });
+            const promises = batch.map(normalizeSingleChat);
             outputFilesList = [...outputFilesList, ...await Promise.allSettled(promises)];
         }
         const finalOutputFilesList = outputFilesList.filter(item => item.status === "fulfilled" && item.value).map(item => item.value);

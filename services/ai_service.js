@@ -5,7 +5,7 @@ import { writeCleanChats } from "./chat_cleaner.js";
 process.loadEnvFile?.();
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-export default async function generate_gemini_response(chatId, newChat) {
+export default async function generate_ai_response(chatId, newChat) {
     try {
         const id = chatId || newChat.id
         const contents = formatMessagesForGemini(newChat.messages);
@@ -27,7 +27,7 @@ export default async function generate_gemini_response(chatId, newChat) {
         return chatWithAiResponse;
     }
     catch (err) {
-        console.log("Error generating gemini response, ", err);
+        console.log("Error generating ai response, ", err);
         return {
             ...newChat,
             messages: [
