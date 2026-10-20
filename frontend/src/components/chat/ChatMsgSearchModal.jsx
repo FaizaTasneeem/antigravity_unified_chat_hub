@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { X } from "lucide-react";
+import { chatStore } from "../../store/AppStore";
 
-function ChatMsgSearchModal({ setShowChatMsgSearchModal, chatMsg }) {
+function ChatMsgSearchModal({ setShowChatMsgSearchModal }) {
+    const { chatMsg } = chatStore();
     const [searchInput, setSearchInput] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
     useEffect(() => {
-        // if (!searchInput) return;
+        if (!searchInput) return;
         const timer = setTimeout(() => {
             const result = chatMsg.messages
                 .filter(chat => chat.text.toLowerCase().includes(searchInput.toLowerCase()))
@@ -28,8 +30,8 @@ function ChatMsgSearchModal({ setShowChatMsgSearchModal, chatMsg }) {
                 <input type="text" id="searchInput" name="searchInput" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="mt-4 p-1.5 bg-[#0E1014] rounded-lg border-2 border-gray-600 focus:border-[#5B5CF6]/60 focus:outline-none text-sm" placeholder="🔍 Search by text..." />
 
                 <div className="mt-8 flex flex-col overflow-y-auto w-full min-w-0">
-                    {searchResults.length !== 0 && searchResults.map(chat => (
-                        <NavLink key={chatMsg.id} to={`/chat/${chatMsg.id}?searchStr=${encodeURIComponent(chat)}`} onClick={() => setShowChatMsgSearchModal(false)} className="cursor-pointer p-1 text-sm flex gap-2">
+                    {searchResults.length !== 0 && searchResults.map((chat, id) => (
+                        <NavLink key={id} to={`/chat/${chatMsg.id}?searchStr=${encodeURIComponent(searchInput)}`} onClick={() => setShowChatMsgSearchModal(false)} className="cursor-pointer p-1 text-sm flex gap-2">
                             <span className="text-gray-400 truncate">{chat}</span>
                         </NavLink>
                     ))}

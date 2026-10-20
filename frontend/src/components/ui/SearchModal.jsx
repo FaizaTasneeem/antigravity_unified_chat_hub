@@ -9,7 +9,7 @@ function SearchModal({ chatList, setShowSearchModal }) {
     useEffect(() => {
         if (!searchInput) return;
         const timer = setTimeout(() => {
-            window.electronAPI.getSearchFileList(searchInput).then((data) => {
+            window.electronAPI.getSearchFileList((searchInput)).then((data) => {
                 setSearchResults(data);
             });
         }, 500);
@@ -35,7 +35,7 @@ function SearchModal({ chatList, setShowSearchModal }) {
                         </NavLink>
                     ))}
                     {searchResults.length !== 0 && searchResults.map(chat => (
-                        <NavLink key={chat.id} to={`/chat/${chat.id}?searchStr=${searchInput}`} onClick={() => setShowSearchModal(false)} className="cursor-pointer p-1 text-sm flex gap-2">
+                        <NavLink key={chat.id} to={`/chat/${chat.id}?searchStr=${encodeURIComponent(searchInput)}`} onClick={() => setShowSearchModal(false)} className="cursor-pointer p-1 text-sm flex gap-2">
                             <Search className="w-4 h-4 text-indigo-300 shrink-0" />
                             <span className="text-gray-400 truncate">{chat.title || chat.id}</span>
                         </NavLink>

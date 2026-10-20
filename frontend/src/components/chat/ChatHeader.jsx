@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { Search } from "lucide-react"
 import ChatMsgSearchModal from "./ChatMsgSearchModal";
+import { chatStore } from "../../store/AppStore";
 
-function ChatHeader({ chatMsg }) {
+function ChatHeader() {
+    const { chatMsg } = chatStore();
     const [showChatMsgSearchModal, setShowChatMsgSearchModal] = useState(false);
 
     return (
@@ -17,7 +19,7 @@ function ChatHeader({ chatMsg }) {
             </button>
 
             {showChatMsgSearchModal &&
-                <ChatMsgSearchModal setShowChatMsgSearchModal={setShowChatMsgSearchModal} chatMsg={chatMsg} />
+                <ChatMsgSearchModal setShowChatMsgSearchModal={setShowChatMsgSearchModal} />
             }
         </div>
     )

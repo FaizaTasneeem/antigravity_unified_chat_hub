@@ -30,7 +30,7 @@ function Chat() {
         <>
             {chatMsg &&
                 <div className="flex-1 min-w-0 h-screen flex flex-col text-[#F2F4F8] bg-transparent">
-                    <ChatHeader chatMsg={chatMsg} />
+                    <ChatHeader />
 
                     <div className="flex-1 min-w-0 min-h-0 overflow-y-auto flex flex-col gap-3 p-4">
                         {chatMsg.messages &&
