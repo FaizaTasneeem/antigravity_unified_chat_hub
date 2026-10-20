@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../ui/Logo";
 import SearchButton from "../ui/SearchButton";
 import StartNewConvoButton from "../ui/StartNewConvoButton";
+import { chatStore } from "../../store/AppStore";
 
 function Sidebar() {
-    const [chatList, setChatList] = useState([]);
+    const { chatList, setChatList } = chatStore();
 
     useEffect(() => {
         window.electronAPI?.getChatList?.().then((data) => {
-            setChatList(data);
+            setChatList([...data].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)));
         });
     }, []);
 
@@ -17,7 +18,7 @@ function Sidebar() {
         <div className="max-w-[250px] px-2 h-screen flex flex-col gap-8 bg-[#101A30]/[0.502] border-r border-[#8CCFFF]/30 rounded-lb-lg text-[#F6F9FB] text-xs">
             <Logo />
             <div className="flex flex-col gap-2">
-                <SearchButton chatList={chatList} />
+                <SearchButton />
                 <StartNewConvoButton />
             </div>
             {chatList &&

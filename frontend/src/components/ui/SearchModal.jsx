@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { chatStore } from "../../store/AppStore";
 
-function SearchModal({ chatList, setShowSearchModal }) {
+function SearchModal({ setShowSearchModal }) {
+    const { chatList } = chatStore();
     const [searchInput, setSearchInput] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 

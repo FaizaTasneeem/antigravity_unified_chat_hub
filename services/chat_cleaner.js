@@ -77,7 +77,9 @@ export default async function normalize_chats() {
                 const cleanContent = generateCleanContent(folderName, chatTitle, rawContent);
                 if (!cleanContent) return;
                 await writeCleanChats(folderName, cleanContent);
-                return { id: cleanContent.id, title: cleanContent.title };
+                const lastMessage = cleanContent.messages?.at(-1);
+                const timestamp = lastMessage ? new Date(lastMessage.time).getTime() : 0;
+                return { id: cleanContent.id, title: cleanContent.title, timestamp };
             });
             outputFilesList = [...outputFilesList, ...await Promise.allSettled(promises)];
         }

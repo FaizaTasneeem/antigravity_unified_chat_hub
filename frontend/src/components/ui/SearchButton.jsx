@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import SearchModal from "./SearchModal";
 
-function SearchButton({ chatList }) {
+function SearchButton() {
     const [showSearchModal, setShowSearchModal] = useState(false);
 
     return (
@@ -19,7 +19,7 @@ function SearchButton({ chatList }) {
 
 
             {showSearchModal &&
-                <SearchModal chatList={chatList} setShowSearchModal={setShowSearchModal} />
+                <SearchModal setShowSearchModal={setShowSearchModal} />
             }
         </>
     )
