@@ -4,21 +4,20 @@ import { ArrowRight } from "lucide-react";
 import { chatStore } from "../../store/AppStore";
 
 function NewChatInput({ chatId }) {
-    const { chatMsg, setChatMsg, setShowAIResponseLoading } = chatStore();
+    const { chatMsg, setChatMsg, showAIResponseLoading, setShowAIResponseLoading } = chatStore();
     const navigate = useNavigate();
     const [newMsgInput, setNewMsgInput] = useState("");
 
     function handleNewMsgSubmit(e) {
         e.preventDefault();
+        if (!newMsgInput.trim()) return;
         setShowAIResponseLoading(true);
         setNewMsgInput("");
 
         const newChat = appendUserMessage();
         setChatMsg(newChat);
 
-        if (!chatId) {
-            navigate(`/chat/${newChat.id}`);
-        }
+        if (!chatId) navigate(`/chat/${newChat.id}`);
 
         window.electronAPI.sendMessageToAI(chatId, newChat).then((data) => {
             setChatMsg(data);
@@ -51,6 +50,7 @@ function NewChatInput({ chatId }) {
                     value={newMsgInput}
                     onChange={(e) => setNewMsgInput(e.target.value)}
                     placeholder="Type a new message..."
+                    disabled={showAIResponseLoading}
                     className="relative z-10 w-full pl-6 pr-16 py-3 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
                 />
 

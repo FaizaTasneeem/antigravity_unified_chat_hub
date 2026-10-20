@@ -1,5 +1,4 @@
-import { app, BrowserWindow, Menu, ipcMain } from 'electron';
-import { createServer } from './frontend/node_modules/vite/dist/node/index.js';
+import { app, BrowserWindow, Menu, ipcMain, shell } from 'electron';
 import path from 'path';
 import normalize_chats from './services/chat_cleaner.js'
 import { getChatMessages, getSearchFileList } from './services/clean_chat_manager.js';
@@ -8,6 +7,7 @@ import generate_gemini_response from './services/gemini_service.js';
 let viteServer;
 
 async function startViteServer() {
+    const { createServer } = await import('./frontend/node_modules/vite/dist/node/index.js');
     viteServer = await createServer({
         configFile: path.resolve('./frontend/vite.config.js'),
         root: path.resolve('./frontend'),
@@ -25,6 +25,11 @@ async function createWindow() {
         webPreferences: {
             preload: path.join(import.meta.dirname, 'bridge.js')
         }
+    });
+
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        shell.openExternal(url);
+        return { action: 'deny' };
     });
 
     app.isPackaged

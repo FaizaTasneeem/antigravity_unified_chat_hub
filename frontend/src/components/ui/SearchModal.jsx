@@ -7,6 +7,7 @@ function SearchModal({ chatList, setShowSearchModal }) {
     const [searchResults, setSearchResults] = useState([]);
 
     useEffect(() => {
+        if (!searchInput) return;
         const timer = setTimeout(() => {
             window.electronAPI.getSearchFileList(searchInput).then((data) => {
                 setSearchResults(data);

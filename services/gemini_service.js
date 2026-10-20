@@ -7,9 +7,10 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function generate_gemini_response(chatId, newChat) {
     try {
+        const id = chatId || newChat.id
         const contents = formatMessagesForGemini(newChat.messages);
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-3.1-flash-lite-preview",
             contents,
         });
 
@@ -22,7 +23,7 @@ export default async function generate_gemini_response(chatId, newChat) {
                 }
             ]
         };
-        await writeCleanChats(chatId, chatWithAiResponse);
+        await writeCleanChats(id, chatWithAiResponse);
         return chatWithAiResponse;
     }
     catch (err) {
