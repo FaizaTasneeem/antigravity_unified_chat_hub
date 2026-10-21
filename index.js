@@ -16,7 +16,7 @@ async function startViteServer() {
     await viteServer.listen();
 }
 
-async function createWindow() {
+function createWindow() {
     Menu.setApplicationMenu(null);
 
     const mainWindow = new BrowserWindow({
@@ -41,7 +41,18 @@ function registerIpcHandlers(normalized_chatList) {
     ipcMain.handle('get-chat-list', () => normalized_chatList);
     ipcMain.handle('get-chat-msg', (_event, id) => getChatMessages(id));
     ipcMain.handle('get-search-file-list', (_event, searchStr) => getSearchFileList(searchStr));
-    ipcMain.handle('send-msg-to-ai', (_event, chatId, newChatMsgList) => generate_ai_response(chatId, newChatMsgList));
+
+    ipcMain.on('send-msg-to-ai', async (event, { chatId, newChat }) => {
+        try {
+            const finalChat = await generate_ai_response(chatId, newChat, (chunk) => {
+                event.sender.send('ai-chunk', { chatId, chunk })
+            });
+            // event.sender.send('ai-done', { chatId, finalChat })
+        }
+        catch (err) {
+            event.sender.send('ai-error', { chatId, error: err.message })
+        }
+    });
 }
 
 app.whenReady().then(async () => {
@@ -49,7 +60,7 @@ app.whenReady().then(async () => {
         const normalized_chatList = await normalize_chats();
         registerIpcHandlers(normalized_chatList);
         if (!app.isPackaged) await startViteServer();
-        await createWindow();
+        createWindow();
     }
     catch (err) {
         console.log('Error starting electron process: ', err);

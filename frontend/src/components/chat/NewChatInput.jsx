@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { chatStore } from "../../store/AppStore";
@@ -23,10 +23,11 @@ function NewChatInput({ chatId }) {
             navigate(`/chat/${newChat.id}`);
         }
 
-        window.electronAPI.sendMessageToAI(chatId, newChat).then((data) => {
-            setChatMsg(data);
-            setShowAIResponseLoading(false);
-        });
+        window.aiAPI.sendMessageToAI({ chatId, newChat })
+        // .then((data) => {
+        //     setChatMsg(data);
+        //     setShowAIResponseLoading(false);
+        // });
     }
 
     function appendUserMessage() {
@@ -40,6 +41,25 @@ function NewChatInput({ chatId }) {
             return { ...chatMsg, id: newId, title: newId, messages: newChatMsgList };
         }
     }
+
+    useEffect(() => {
+        const unsubscribe = window.aiAPI.onAiChunk(({ chunk }) => {
+            setShowAIResponseLoading(false);
+            setChatMsg({
+                ...chatMsg,
+                messages: [...chatMsg.messages,
+                {
+                    sender: "assistant",
+                    text: chatMsg.messages.at(-1).text + chunk,
+                    time: new Date().toLocaleString()
+                }]
+            });
+        })
+
+        return () => unsubscribe();
+
+    }, []);
+
 
     return (
         <div className="relative w-[80%] max-w-3xl rounded-full p-[2px] overflow-hidden group focus-within:bg-[#1A73E8] focus-within:shadow-[0_0_20px_rgba(26,115,232,0.45)] transition-all">

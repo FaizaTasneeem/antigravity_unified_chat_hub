@@ -5,5 +5,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getChatList: () => ipcRenderer.invoke('get-chat-list'),
     getChatMsg: (id) => ipcRenderer.invoke('get-chat-msg', id),
     getSearchFileList: (searchStr) => ipcRenderer.invoke('get-search-file-list', searchStr),
-    sendMessageToAI: (chatId, newChatMsgList) => ipcRenderer.invoke('send-msg-to-ai', chatId, newChatMsgList),
 });
+
+contextBridge.exposeInMainWorld('aiAPI', {
+    sendMessageToAI: (payload) => ipcRenderer.send('send-msg-to-ai', payload),
+    onAiChunk: (callback) => {
+        const handler = (_event, data) => callback(data);
+        ipcRenderer.on('ai-chunk', handler);
+        return () => ipcRenderer.removeListener('ai-chunk', handler);
+    },
+    onAiDone: (callback) => {
+        const handler = (_event, data) => callback(data);
+        ipcRenderer.on('ai-done', handler);
+        return () => ipcRenderer.removeListener('ai-done', handler);
+    }
+})
