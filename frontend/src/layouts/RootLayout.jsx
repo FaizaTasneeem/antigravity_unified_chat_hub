@@ -1,42 +1,20 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/sidebar/Sidebar";
-import { chatStore } from "../store/AppStore";
+import { handleAiChunk, handleAiDone, handleAiError } from "../handlers/aiStreamHandlers";
 
 function RootLayout() {
-    const { setChatMsg, setShowAIResponseLoading } = chatStore();
 
     useEffect(() => {
-        const unsubscribe = window.aiAPI.onAiChunk(({ chatId: id, chunk }) => {
-            const updatedChatMsg = chatStore.getState().chatMsg;
-            if (!updatedChatMsg || updatedChatMsg?.id !== id) return;
+        const unsubChunk = window.aiAPI.onAiChunk(handleAiChunk);
+        const unsubDone = window.aiAPI.onAiDone(handleAiDone);
+        const unsubError = window.aiAPI.onAiError(handleAiError);
 
-            setShowAIResponseLoading(false);
-
-            const lastMsg = updatedChatMsg.messages.at(-1);
-
-            if (lastMsg?.sender === "assistant") {
-                setChatMsg({
-                    ...updatedChatMsg,
-                    messages: [...updatedChatMsg.messages.slice(0, -1), {
-                        ...lastMsg,
-                        text: lastMsg?.text + chunk
-                    }]
-                });
-            }
-            else {
-                setChatMsg({
-                    ...updatedChatMsg,
-                    messages: [...updatedChatMsg.messages, {
-                        sender: "assistant",
-                        text: chunk,
-                        time: new Date().toLocaleString()
-                    }]
-                });
-            }
-        })
-
-        return () => unsubscribe();
+        return () => {
+            unsubChunk();
+            unsubDone();
+            unsubError();
+        };
 
     }, []);
 
