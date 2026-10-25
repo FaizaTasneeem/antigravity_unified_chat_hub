@@ -18,5 +18,10 @@ contextBridge.exposeInMainWorld('aiAPI', {
         const handler = (_event, data) => callback(data);
         ipcRenderer.on('ai-done', handler);
         return () => ipcRenderer.removeListener('ai-done', handler);
+    },
+    onAiError: (callback) => {
+        const handler = (_event, data) => callback(data);
+        ipcRenderer.on('ai-error', handler);
+        return () => ipcRenderer.removeListener('ai-error', handler);
     }
 })

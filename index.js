@@ -47,7 +47,7 @@ function registerIpcHandlers(normalized_chatList) {
             const finalChat = await generate_ai_response(chatId, newChat, (chunk) => {
                 event.sender.send('ai-chunk', { chatId, chunk })
             });
-            // event.sender.send('ai-done', { chatId, finalChat })
+            event.sender.send('ai-done', { chatId, finalChat })
         }
         catch (err) {
             event.sender.send('ai-error', { chatId, error: err.message })
