@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { chatStore } from "../../store/AppStore";
 
 function NewChatInput({ chatId }) {
-    const { chatList, setChatList, chatMsg, setChatMsg, showAIResponseLoading, setShowAIResponseLoading } = chatStore();
+    const { setChatList, chatMsg, setChatMsg, showAIResponseLoading, setShowAIResponseLoading } = chatStore();
     const navigate = useNavigate();
     const [newMsgInput, setNewMsgInput] = useState("");
 
@@ -18,16 +18,14 @@ function NewChatInput({ chatId }) {
         setChatMsg(newChat);
 
         if (!chatId) {
-            const newChatItem = { id: newChat.id, title: newChat.title, timestamp: newChat.messages[0]?.time };
-            setChatList([newChatItem, ...chatList]);
+            const newChatItem = { id: newChat.id, title: newChat.title, timestamp: new Date().getTime() };
+            window.electronAPI.setChatList(newChatItem).then((data) => {
+                setChatList([...data].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)));
+            })
             navigate(`/chat/${newChat.id}`);
         }
 
         window.aiAPI.sendMessageToAI({ chatId: chatId ?? newChat.id, newChat })
-        // .then((data) => {
-        //     setChatMsg(data);
-        //     setShowAIResponseLoading(false);
-        // });
     }
 
     function appendUserMessage() {

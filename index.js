@@ -39,6 +39,10 @@ function createWindow() {
 
 function registerIpcHandlers(normalized_chatList) {
     ipcMain.handle('get-chat-list', () => normalized_chatList);
+    ipcMain.handle('set-chat-list', (_event, newChat) => {
+        normalized_chatList = [...normalized_chatList, newChat];
+        return normalized_chatList;
+    });
     ipcMain.handle('get-chat-msg', (_event, id) => getChatMessages(id));
     ipcMain.handle('get-search-file-list', (_event, searchStr) => getSearchFileList(searchStr));
 

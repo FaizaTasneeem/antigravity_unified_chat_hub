@@ -9,24 +9,24 @@ export default async function generate_ai_response(chatId, newChat, onChunk) {
     try {
         const id = chatId || newChat.id
         const contents = formatMessagesForGemini(newChat.messages);
-        const responseStream = await ai.models.generateContentStream({
-            model: "gemini-3.1-flash-lite-preview",
-            contents,
-        });
-        // const responseStream = "This is a simulated AI response streaming token by token directly through Electron IPC.".split(" ");
+        // const responseStream = await ai.models.generateContentStream({
+        //     model: "gemini-3.1-flash-lite-preview",
+        //     contents,
+        // });
+        const responseStream = "This is a simulated AI response streaming token by token directly through Electron IPC.".split(" ");
 
         let fullText = "";
-        for await (const chunk of responseStream) {
-            const text = chunk.text;
-            fullText += text;
-            onChunk(text);
-        }
-        // for (const word of responseStream) {
-        //     const chunk = word + " ";
-        //     fullText += chunk;
-        //     await new Promise(resolve => setTimeout(resolve, 100));
-        //     onChunk(chunk);
+        // for await (const chunk of responseStream) {
+        //     const text = chunk.text;
+        //     fullText += text;
+        //     onChunk(text);
         // }
+        for (const word of responseStream) {
+            const chunk = word + " ";
+            fullText += chunk;
+            await new Promise(resolve => setTimeout(resolve, 100));
+            onChunk(chunk);
+        }
 
         const chatWithAiResponse = {
             ...newChat,
