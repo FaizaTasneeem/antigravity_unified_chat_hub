@@ -13,6 +13,17 @@ async function getRawChatsDirNames() {
     }
 }
 
+async function getCleanChatsFileNames() {
+    try {
+        const entries = await readdir(OUTPUT_DIR);
+        const folderNames = entries.filter(entry => entry.endsWith('_output.json')).map(entry => entry.replace('_output.json', ''));
+        return folderNames;
+    }
+    catch (error) {
+        console.log('Error reading clean chat files directory:', error);
+    }
+}
+
 async function readRawChats(conversationId) {
     try {
         const content = await readFile(getRawChatFilePath(conversationId), 'utf-8');
@@ -71,11 +82,10 @@ async function normalizeSingleChat(folderName) {
         if (!rawContent) return;
 
         const chatTitle = getConversationTitle(folderName);
-        const cleanContent = generateCleanContent(folderName, chatTitle, rawContent);
-        if (!cleanContent) return;
+        content = generateCleanContent(folderName, chatTitle, rawContent);
+        if (!content) return;
 
-        await writeCleanChats(folderName, cleanContent);
-        content = cleanContent;
+        await writeCleanChats(folderName, content);
     }
 
     const lastMessage = content.messages?.at(-1);
@@ -87,16 +97,25 @@ export default async function normalize_chats() {
     try {
         await mkdir(OUTPUT_DIR, { recursive: true });
 
-        const folderNames = await getRawChatsDirNames() || [];
+        const rawFolders = await getRawChatsDirNames() || [];
+        const cleanFiles = await getCleanChatsFileNames() || [];
+
+        const fileNames = Array.from(new Set([...rawFolders, ...cleanFiles]));
+
         const BATCH_SIZE = 15;
         let outputFilesList = [];
 
-        for (let i = 0; i < folderNames.length; i += BATCH_SIZE) {
-            const batch = folderNames.slice(i, i + BATCH_SIZE);
+        for (let i = 0; i < fileNames.length; i += BATCH_SIZE) {
+            const batch = fileNames.slice(i, i + BATCH_SIZE);
             const promises = batch.map(normalizeSingleChat);
             outputFilesList = [...outputFilesList, ...await Promise.allSettled(promises)];
         }
-        const finalOutputFilesList = outputFilesList.filter(item => item.status === "fulfilled" && item.value).map(item => item.value);
+
+        const finalOutputFilesList = outputFilesList
+            .filter(item => item.status === "fulfilled" && item.value)
+            .map(item => item.value)
+            .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
         return finalOutputFilesList;
     }
     catch (err) {

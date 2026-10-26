@@ -10,7 +10,7 @@ function Sidebar() {
 
     useEffect(() => {
         window.electronAPI?.getChatList?.().then((data) => {
-            setChatList([...data].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)));
+            setChatList(data);
         });
     }, []);
 

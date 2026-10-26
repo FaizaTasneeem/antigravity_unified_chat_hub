@@ -40,7 +40,7 @@ function createWindow() {
 function registerIpcHandlers(normalized_chatList) {
     ipcMain.handle('get-chat-list', () => normalized_chatList);
     ipcMain.handle('set-chat-list', (_event, newChat) => {
-        normalized_chatList = [...normalized_chatList, newChat];
+        normalized_chatList = [...normalized_chatList, newChat].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         return normalized_chatList;
     });
     ipcMain.handle('get-chat-msg', (_event, id) => getChatMessages(id));
