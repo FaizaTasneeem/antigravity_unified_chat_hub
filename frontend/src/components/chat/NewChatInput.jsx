@@ -17,13 +17,12 @@ function NewChatInput({ chatId }) {
         const newChat = appendUserMessage();
         setChatMsg(newChat);
 
-        if (!chatId) {
-            const newChatItem = { id: newChat.id, title: newChat.title, timestamp: new Date().getTime() };
-            window.electronAPI.setChatList(newChatItem).then((data) => {
-                setChatList([...data].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)));
-            })
-            navigate(`/chat/${newChat.id}`);
-        }
+        const newChatItem = { id: newChat.id, title: newChat.title, timestamp: new Date().getTime() };
+        window.electronAPI.setChatList(newChatItem).then((data) => {
+            setChatList(data);
+        });
+
+        if (!chatId) navigate(`/chat/${newChat.id}`);
 
         window.aiAPI.sendMessageToAI({ chatId: chatId ?? newChat.id, newChat })
     }

@@ -28,11 +28,18 @@ export function handleAiChunk({ chatId, chunk }) {
 }
 
 export function handleAiDone({ chatId, finalChat }) {
-    const { chatMsg, setChatMsg, setShowAIResponseLoading } = chatStore.getState();
+    const { chatMsg, setChatMsg, setChatList, setShowAIResponseLoading } = chatStore.getState();
 
     setShowAIResponseLoading(false);
-    if (chatMsg && chatMsg.id === chatId && finalChat) {
-        setChatMsg(finalChat);
+    if (finalChat) {
+        if (chatMsg && chatMsg.id === chatId) {
+            setChatMsg(finalChat);
+        }
+
+        const newChatItem = { id: finalChat.id, title: finalChat.title, timestamp: new Date().getTime() };
+        window.electronAPI.setChatList(newChatItem).then((data) => {
+            setChatList(data);
+        });
     }
 }
 

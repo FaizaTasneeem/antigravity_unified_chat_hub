@@ -4,7 +4,6 @@ import Sidebar from "../components/sidebar/Sidebar";
 import { handleAiChunk, handleAiDone, handleAiError } from "../handlers/aiStreamHandlers";
 
 function RootLayout() {
-
     useEffect(() => {
         const unsubChunk = window.aiAPI.onAiChunk(handleAiChunk);
         const unsubDone = window.aiAPI.onAiDone(handleAiDone);
