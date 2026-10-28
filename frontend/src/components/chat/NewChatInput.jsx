@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { chatStore } from "../../store/AppStore";
+import ModelSelector from "./ModelSelector";
+
 
 function NewChatInput({ chatId }) {
     const { setChatList, chatMsg, setChatMsg, showAIResponseLoading, setShowAIResponseLoading } = chatStore();
@@ -40,23 +42,27 @@ function NewChatInput({ chatId }) {
     }
 
     return (
-        <div className="relative w-[80%] max-w-3xl rounded-full p-[2px] overflow-hidden group focus-within:bg-[#1A73E8] focus-within:shadow-[0_0_20px_rgba(26,115,232,0.45)] transition-all">
+        <div className="relative w-[80%] max-w-3xl rounded-full p-[2px] group focus-within:bg-[#1A73E8] focus-within:shadow-[0_0_20px_rgba(26,115,232,0.45)] transition-all">
 
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-focus-within:hidden">
+            <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center pointer-events-none group-focus-within:hidden">
                 <div className="w-[300%] aspect-square animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_0deg,#1A73E8,#00C853,#FFB300,#FF3B30,#1A73E8)]" />
             </div>
 
-            <form onSubmit={handleNewMsgSubmit} className="flex relative">
+            <form onSubmit={handleNewMsgSubmit} className="relative pl-2 w-full rounded-full bg-[#15243D] flex items-center justify-start ">
+                <div className="shrink-0">
+                    <ModelSelector />
+                </div>
+
                 <input
                     type="text"
                     value={newMsgInput}
                     onChange={(e) => setNewMsgInput(e.target.value)}
                     placeholder="Type a new message..."
                     disabled={showAIResponseLoading}
-                    className="relative z-10 w-full pl-6 pr-16 py-3 bg-[#15243D] rounded-full text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
+                    className="min-w-0 flex-1 bg-transparent px-2 py-3 text-[#F2F4F8] placeholder-gray-400 outline-none transition-colors"
                 />
 
-                <button className="absolute z-90 right-0 cursor-pointer p-3 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full">
+                <button className="shrink-0 cursor-pointer p-3 bg-[#101725]/60 border-2 border-[#1A73E8] rounded-full">
                     <ArrowRight className="w-5 h-5 text-[#1A73E8]" />
                 </button>
 

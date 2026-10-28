@@ -1,6 +1,6 @@
 process.loadEnvFile?.();
 
-async function getFreeModels() {
+export default async function getFreeModels() {
     try {
         const response = await fetch('https://openrouter.ai/api/v1/models', {
             method: 'GET',
@@ -17,7 +17,11 @@ async function getFreeModels() {
 
         const freeModels = res.data
             .filter(model => parseFloat(model.pricing?.prompt) === 0 || model.id.endsWith(':free'))
-            .map(model => model.id + " - " + model.name);
+            .map(model => ({
+                id: model.id,
+                name: model.name,
+                description: model.description
+            }));
 
         console.log(freeModels);
         return freeModels;
@@ -26,5 +30,3 @@ async function getFreeModels() {
         console.error('Request failed:', error.message);
     }
 }
-
-getFreeModels();

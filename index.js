@@ -3,6 +3,7 @@ import path from 'path';
 import normalize_chats from './services/chat_cleaner.js'
 import { getChatMessages, getSearchFileList } from './services/clean_chat_manager.js';
 import generate_ai_response from './services/ai_service.js';
+import getFreeModels from './services/free_models_fetcher.js';
 
 let viteServer;
 let chatListCache = [];
@@ -49,6 +50,7 @@ function registerIpcHandlers() {
     });
     ipcMain.handle('get-chat-msg', (_event, id) => getChatMessages(id));
     ipcMain.handle('get-search-file-list', (_event, searchStr) => getSearchFileList(searchStr));
+    ipcMain.handle('get-free-models-list', () => getFreeModels());
 
     ipcMain.on('send-msg-to-ai', async (event, { chatId, newChat }) => {
         try {

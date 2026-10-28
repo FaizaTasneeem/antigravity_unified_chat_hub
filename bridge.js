@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     setChatList: (newChat) => ipcRenderer.invoke('set-chat-list', newChat),
     getChatMsg: (id) => ipcRenderer.invoke('get-chat-msg', id),
     getSearchFileList: (searchStr) => ipcRenderer.invoke('get-search-file-list', searchStr),
+    getFreeModelsList: () => ipcRenderer.invoke('get-free-models-list'),
 });
 
 contextBridge.exposeInMainWorld('aiAPI', {
