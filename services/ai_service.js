@@ -1,32 +1,38 @@
-import { GoogleGenAI } from "@google/genai";
+import { OpenRouter } from '@openrouter/sdk';
 import { writeCleanChats } from "./chat_cleaner.js";
 
 
 process.loadEnvFile?.();
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const openRouter = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
 
 export default async function generate_ai_response(chatId, newChat, onChunk) {
     try {
         const id = chatId || newChat.id
-        const contents = formatMessagesForGemini(newChat.messages);
-        // const responseStream = await ai.models.generateContentStream({
-        //     model: "gemini-3.1-flash-lite-preview",
-        //     contents,
-        // });
-        const responseStream = "This is a simulated AI response streaming token by token directly through Electron IPC.".split(" ");
+        const messages = formatMessagesForGemini(newChat.messages);
+
+        const responseStream = await openRouter.chat.send({
+            chatRequest: {
+                model: "nvidia/nemotron-3.5-lightning:free",
+                messages,
+                stream: true
+            }
+        });
+        // const responseStream = "This is a simulated AI response streaming token by token directly through Electron IPC.".split(" ");
 
         let fullText = "";
-        // for await (const chunk of responseStream) {
-        //     const text = chunk.text;
-        //     fullText += text;
-        //     onChunk(text);
-        // }
-        for (const word of responseStream) {
-            const chunk = word + " ";
-            fullText += chunk;
-            await new Promise(resolve => setTimeout(resolve, 100));
-            onChunk(chunk);
+        for await (const chunk of responseStream) {
+            const text = chunk.choices?.[0]?.delta?.content || "";
+            if (text) {
+                fullText += text;
+                onChunk(text);
+            }
         }
+        // for (const word of responseStream) {
+        //     const chunk = word + " ";
+        //     fullText += chunk;
+        //     await new Promise(resolve => setTimeout(resolve, 100));
+        //     onChunk(chunk);
+        // }
 
         const chatWithAiResponse = {
             ...newChat,
@@ -48,7 +54,7 @@ export default async function generate_ai_response(chatId, newChat, onChunk) {
                 ...newChat.messages,
                 {
                     sender: "assistant",
-                    text: "⚠️ The AI service is currently experiencing high demand. Please try again in a moment.",
+                    text: `⚠️ Error generating ai response: ${err.message}`,
                     time: new Date().toLocaleString()
                 }
             ]
@@ -58,7 +64,7 @@ export default async function generate_ai_response(chatId, newChat, onChunk) {
 
 function formatMessagesForGemini(newChatMsgList) {
     return newChatMsgList.map(msg => ({
-        role: msg.sender === "user" ? msg.sender : "model",
-        parts: [{ text: msg.text }]
+        role: msg.sender === "user" ? msg.sender : "assistant",
+        content: msg.text || ""
     }));
 }
