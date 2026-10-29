@@ -52,9 +52,9 @@ function registerIpcHandlers() {
     ipcMain.handle('get-search-file-list', (_event, searchStr) => getSearchFileList(searchStr));
     ipcMain.handle('get-free-models-list', () => getFreeModels());
 
-    ipcMain.on('send-msg-to-ai', async (event, { chatId, newChat }) => {
+    ipcMain.on('send-msg-to-ai', async (event, { chatId, newChat, modelSelected }) => {
         try {
-            const finalChat = await generate_ai_response(chatId, newChat, (chunk) => {
+            const finalChat = await generate_ai_response(chatId, newChat, modelSelected, (chunk) => {
                 event.sender.send('ai-chunk', { chatId, chunk })
             });
             event.sender.send('ai-done', { chatId, finalChat })

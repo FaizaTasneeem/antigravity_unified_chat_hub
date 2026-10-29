@@ -6,7 +6,7 @@ import ModelSelector from "./ModelSelector";
 
 
 function NewChatInput({ chatId }) {
-    const { setChatList, chatMsg, setChatMsg, showAIResponseLoading, setShowAIResponseLoading } = chatStore();
+    const { setChatList, chatMsg, setChatMsg, showAIResponseLoading, setShowAIResponseLoading, modelSelected } = chatStore();
     const navigate = useNavigate();
     const [newMsgInput, setNewMsgInput] = useState("");
 
@@ -26,7 +26,7 @@ function NewChatInput({ chatId }) {
 
         if (!chatId) navigate(`/chat/${newChat.id}`);
 
-        window.aiAPI.sendMessageToAI({ chatId: chatId ?? newChat.id, newChat })
+        window.aiAPI.sendMessageToAI({ chatId: chatId ?? newChat.id, newChat, modelSelected })
     }
 
     function appendUserMessage() {

@@ -5,14 +5,14 @@ import { writeCleanChats } from "./chat_cleaner.js";
 process.loadEnvFile?.();
 const openRouter = new OpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
 
-export default async function generate_ai_response(chatId, newChat, onChunk) {
+export default async function generate_ai_response(chatId, newChat, modelSelected, onChunk) {
     try {
         const id = chatId || newChat.id
         const messages = formatMessagesForGemini(newChat.messages);
 
         const responseStream = await openRouter.chat.send({
             chatRequest: {
-                model: "nvidia/nemotron-3.5-lightning:free",
+                model: modelSelected.id,
                 messages,
                 stream: true
             }
