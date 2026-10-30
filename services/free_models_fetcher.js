@@ -23,7 +23,7 @@ export default async function getFreeModels() {
                 description: model.description
             }));
 
-        console.log(freeModels);
+        // console.log(freeModels);
         return freeModels;
     }
     catch (error) {
